@@ -26,14 +26,21 @@ plt.xlabel('x')
 plt.ylabel('y')
 #%%
 from fun import mom_k
-expt=[]
+import math
+expect=[]
 mkx=[]
 for j in range(n_c):
     for i in range(n_p-1):
         x_i=x[j,:i+1]
-        mkx.append(mom_k(1,x_i))    
-    plt.plot(mkx)
-    mkx=[]
+        y_i=y[j,:i+1]
+        r_i=[]
+        for k in range(i+1):
+            r_k=math.sqrt(x_i[k]**2+y_i[k]**2) 
+            r_i.append(r_k)
+             
+        expect.append(mom_k(1,r_i))    
+    plt.plot(expect)
+    expect=[]
 plt.xlabel('$n_p$')
-plt.ylabel('x')
+plt.ylabel('<r>')
 
