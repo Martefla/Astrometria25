@@ -34,4 +34,35 @@ def pearson_correlation (x , y ) :
  return numerator / denominator 
 
 #%%
-from S
+from fun import pearson_correlation, glc, lfg
+
+ret=[1,2,3,5,7,10]
+n=1000
+glc256=glc(n)
+glc31=glc(n,16807,0,2**31-1)
+lfg=lfg(n)
+
+pearson=[]
+for i in ret:
+  x=glc256[:-i]
+  y=glc256[i:]
+  pearson.append(pearson_correlation(x,y))
+
+print(pearson)
+
+pearson=[]
+for i in ret:
+  x=glc31[:-i]
+  y=glc31[i:]
+  pearson.append(pearson_correlation(x,y))
+
+print(pearson)
+
+pearson=[]
+for i in ret:
+  x=lfg[:-i]
+  y=lfg[i:]
+  pearson.append(pearson_correlation(x,y))
+
+print(pearson)
+
