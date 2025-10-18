@@ -124,3 +124,71 @@ def lfg(n,m=2**32,k=55,j=24,x0=5):
         
     return num_al1
 
+#%%
+import numpy as np
+
+def FT(y,mu,xi,lamb):
+    '''
+    Función inversa de la acumulada de la distribución Fisher-Tippet de tipo 1 y 2.
+
+    Parámetros:
+    y: numpy array, frecuencia de Fisher-Tippet.
+    mu, xi, lamb: parámetros de la forma de la función.
+
+    Return:
+    f: variable de la función de Fisher-Tippet.
+
+    '''
+    if xi==0:
+        #Tipo 1
+        f=-np.log(-np.log(y))/lamb+mu
+    else:
+        #Tipo 2
+        f=((-np.log(y))**(-xi)-1)/(xi*lamb)+mu
+    return f
+
+#%%
+import numpy as np
+
+def bootstrap(x,func,m=1000):
+    '''
+    Remuestreo bootstrap para calcular un estadístico de la muestra.
+
+    Prámetros:
+    x: lista de los valores de la muestra.
+    func: estadítico que se quiera calcular en forma de función.
+    m=1000: número de submuestras para el cálculo.
+
+    Returns:
+    y: valor del estadítico indicado de bootstrap.
+    '''
+    y=np.zeros(m)
+    for i in range(m):
+        _x = np.random.choice(x,size=len(x),replace=True)
+        y[i]=func(_x)
+    return y
+
+
+#%%
+import numpy as np
+import scipy.stats as st
+
+def x2_valorp_frec(O,E,df):
+    '''
+    Cálculo de xi y valor p cuadrado para el análisis de modelos
+    
+    Parámetros:
+    O: lista de frecuencias de la muestra.
+    E: lista de frecuencias del modelo con el mismo bineado.
+    df: grados de libertad.
+    
+    Return:
+    xi2: valor de xi cuadrado.
+    p: valor p asociado al test de xi cuadrado.
+    '''
+    mask = np.array(E) > 0
+    O = np.array(O)[mask]
+    E = np.array(E)[mask]
+    xi2=np.sum(((O-E)**2)/E)
+    p=1-st.chi2.cdf(xi2,df)
+    return(xi2,p)
